@@ -11,7 +11,9 @@
         private $params;
         private $db;
 
-        private $mappers=Array();
+        private $mappers=array();
+
+        private $mapping=array();
 
         private function __construct(){}
         private function __clone(){}
@@ -41,6 +43,9 @@
         public function addMapper($mapperName, DataMapper $mapper){
             $this->mappers[$mapperName]=$mapper;
             $this->mappers[$mapperName]->setDM($this);
+
+            // 'users' => 'UserMapper'
+            $this->mapping[$mapper->getCollectionName()]=$mapperName.'Mapper';
         }
 
         public function getMapper($mapperName){
@@ -49,7 +54,6 @@
         
         // make an Array object $document from php object $obj
         public function buildDocumentFromObject(DataObject $obj){
-          echo 'obj<br>';
           $reflect= new \ReflectionObject($obj);
           $props=$reflect->getProperties(\ReflectionProperty::IS_PRIVATE);
 
@@ -87,7 +91,6 @@
                           $arr=array();
 
                           foreach($val as $item){
-                              var_dump($item);
                               $doc=$this->buildDocumentFromObject($item);
                               $arr[]=$doc;
                           }
@@ -163,7 +166,14 @@
         // querys this collection
         public function find($collectionName,$query=array(),$fields=array()){
              $collection=$this->db->selectCollection($collectionName);
-             return $collection->find($query,$fields);
+             $cursor=$collection->find($query,$fields);
+
+             $documents=array();
+             foreach($cursor as $doc)
+                 //$documents[]=buildObjectFromDocument($doc);
+                 $documents[]=$df->getDataObject($collectionName);
+
+             return $documents;
         }
 
         // querys this collection, returning a single element

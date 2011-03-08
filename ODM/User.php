@@ -19,8 +19,11 @@
             return $this->login;
         }
 
-        public function setPassword($pass, CryptoEngine $cryptoEngine){
-            $this->pass=$cryptoEngine->encrypt($pass);
+        public function setPassword($pass, CryptoEngine $cryptoEngine=null){
+            if ($cryptoEngin)
+                $this->pass=$cryptoEngine->encrypt($pass);
+            else
+                $this->pass=$pass;
         }
 
         public function getPassword(){

@@ -12,11 +12,31 @@
     use MongoBlog\Components\Date\MongoDBDate;
 
     require_once __DIR__.'/autoload.php';
+    $config=include 'config.php';
 
     $dm=ODM\DocumentManager::create();
-    
-    $dm->setConnection(new \Mongo('mongodb://localhost:27017'),Array('dbname'=>'mongoblog'));
+    $dm->setConnection(new \Mongo("mongodb://{$config['dbhost']}",array('dbname'=>$config['dbname'])));
 
+    $userFactory=ODM\UserFactory::create();
+    $postFactory=ODM\PostFactory::create();
+
+    $dm->addMapper('User',$df->createDataMapper('users',$config['map']));
+    $dm->addMapper('Post',$df->createDataMapper('posts',$config['map']));
+
+    $cryptoEngine=new CryptoMD5();
+    
+    $userMax=$userFactory->createDataObject(array('login'=>'max',
+                                                  'pass'=>$cryptoEngine->encrypt('12345'),
+                                                  'email'=>'mail@maxkalachev.ru'));
+
+    $userJhon=$userFactory->createDataObject(array('login'=>'jhon',
+                                                   'pass'=>$cryptoEngine->encrypt('abc'),
+                                                   'email'=>'jhon@yandex.ru'));
+
+    var_dump($userMax);
+    var_dump($userJhon);
+
+    /*
     $user=new User();
     
     $user->setLogin('max');
@@ -49,6 +69,7 @@
 
     if ($dm->add('Post',$post)) echo 'done';
 
+    
     //if ($dm->updateData('Post',$post_id,$post)) echo 'done';
     /*
     $comments=$dm->findCommentsForPost('Post',$post_id);

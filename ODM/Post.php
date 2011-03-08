@@ -26,7 +26,7 @@
         }
 
         public function addComment(Comment $comment){
-           $this->comments[]=array('author'=>$comment->getAuthor(),'datePub'=>$comment->getDatePub(),'text'=>$comment->getText());
+           $this->comments[]=$comment;
         }
     }
 
