@@ -2,12 +2,12 @@
     namespace MongoBlog\ODM;
 
     class PostFactory extends DataFactory{
-        public function createDataObject($params){
-            $obj=new $this->dataObjectName($params['title'],$params['text'],$parans['author'],$params['datePub']);
+        public function create($name,$params){
+            $obj=new $name($params['title'],$params['text'],$params['author'],$params['datePub']);
             $obj->addTags($params['tags']);
-
+            
             foreach ($params['comments'] as $comment){
-                
+                $commentObj=CommentFactory::create('Comment',array($comment['author'],$comment['datePub'],$comment['text']));
                 $obj->addComment($commentObj);
             }
 

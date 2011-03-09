@@ -4,11 +4,9 @@
     abstract class DataMapper{
         protected $dm;
         protected $collectionName;
-        protected $className;
 
-        public function __construct($collectionName){
+        public function __construct($collectionName=''){
             $this->collectionName=$collectionName;
-            $this->className=__CLASS__;
         }
 
         public function setDM($dm){
@@ -19,8 +17,8 @@
             return $collectionName;
         }
 
-        public function getClassName(){
-            return $className;
+        public function setCollectionName($collectionName){
+            $this->collectionName=$collectionName;
         }
 
         public function add(DataObject $obj){

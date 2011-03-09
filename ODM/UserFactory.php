@@ -1,12 +1,13 @@
 <?php
     namespace MongoBlog\ODM;
 
-    class UserFactory extends DataFactory{
-        public function createDataObject($params){
-            $obj=new $this->dataObjectName;
-            $obj->setLogin($collection['login']);
-            $obj->setPassword($collection['pass']);
-            $obj->setEmail($collection['email']);
+    class UserFactory implements DataFactory{
+        public function create($name,$params){
+            $clsName='MongoBlog\\ODM\\'.$name;
+            $obj=new $clsName;
+            $obj->setLogin($params['login']);
+            $obj->setPassword($params['pass']);
+            $obj->setEmail($params['email']);
             return $obj;
         }
     }

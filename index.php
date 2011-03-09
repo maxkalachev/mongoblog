@@ -1,12 +1,7 @@
 <?php
     namespace MongoBlog;
 
-    use MongoBlog\ODM\User;
-    use MongoBlog\ODM\Post;
-    use MongoBlog\ODM\Comment;
-    use MongoBlog\ODM\UserMapper;
-    use MongoBlog\ODM\PostMapper;
-    use MongoBlog\ODM\CommentMapper;
+    use MongoBlog\ODM\ODMFactory;
     use MongoBlog\Components\CryptoEngine\CryptoMD5;
     use MongoBlog\Components\Date\StrDate;
     use MongoBlog\Components\Date\MongoDBDate;
@@ -15,23 +10,24 @@
     $config=include 'config.php';
 
     $dm=ODM\DocumentManager::create();
-    $dm->setConnection(new \Mongo("mongodb://{$config['dbhost']}",array('dbname'=>$config['dbname'])));
+    $dm->setConnection(new \Mongo("mongodb://{$config['dbhost']}"),array('dbname'=>$config['dbname']));
 
-    $userFactory=ODM\UserFactory::create();
-    $postFactory=ODM\PostFactory::create();
+    //$userFactory=UserFactory::create($config['map']);
+    //$postFactory=PostFactory::create($config['map']);
+    //$commentFactory=CommentFactory::create();
 
-    $dm->addMapper('User',$df->createDataMapper('users',$config['map']));
-    $dm->addMapper('Post',$df->createDataMapper('posts',$config['map']));
+    $dm->addMapper('User',ODMFactory::create('User','Mapper',array('collectionName'=>'users')));
+    $dm->addMapper('Post',ODMFactory::create('Post','Mapper',array('collectionName'=>'posts')));
 
     $cryptoEngine=new CryptoMD5();
     
-    $userMax=$userFactory->createDataObject(array('login'=>'max',
-                                                  'pass'=>$cryptoEngine->encrypt('12345'),
-                                                  'email'=>'mail@maxkalachev.ru'));
+    $userMax=ODMFactory::create('User','Object',array('login'=>'max',
+                                                       'pass'=>$cryptoEngine->encrypt('12345'),
+                                                       'email'=>'mail@maxkalachev.ru'));
 
-    $userJhon=$userFactory->createDataObject(array('login'=>'jhon',
-                                                   'pass'=>$cryptoEngine->encrypt('abc'),
-                                                   'email'=>'jhon@yandex.ru'));
+    $userJhon=ODMFactory::create('User','Object',array('login'=>'jhon',
+                                                        'pass'=>$cryptoEngine->encrypt('abc'),
+                                                        'email'=>'jhon@yandex.ru'));
 
     var_dump($userMax);
     var_dump($userJhon);

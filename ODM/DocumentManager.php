@@ -13,8 +13,6 @@
 
         private $mappers=array();
 
-        private $mapping=array();
-
         private function __construct(){}
         private function __clone(){}
 
@@ -43,9 +41,6 @@
         public function addMapper($mapperName, DataMapper $mapper){
             $this->mappers[$mapperName]=$mapper;
             $this->mappers[$mapperName]->setDM($this);
-
-            // 'users' => 'UserMapper'
-            $this->mapping[$mapper->getCollectionName()]=$mapperName.'Mapper';
         }
 
         public function getMapper($mapperName){
@@ -104,10 +99,6 @@
           }
           
           return $document;
-        }
-
-        public function buildObjectFromDocument($document){
-            
         }
 
         public function prepareId($id){
