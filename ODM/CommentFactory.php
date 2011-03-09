@@ -1,9 +1,10 @@
 <?php
     namespace MongoBlog\ODM;
 
-    class CommentFactory extends DataFactory{
-        public function creat($name,$params){
-            $obj=new $name($params['author'],$params['datePub'],$params['text']);
+    class CommentFactory implements DataFactory{
+        public function create($name,$params){
+            $clsName='MongoBlog\\ODM\\'.$name;
+            $obj=new $clsName($params['author'],$params['datePub'],$params['text']);
             return $obj;
         }
     }
